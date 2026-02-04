@@ -17,9 +17,27 @@
 body {
     background-color: var(--bg-dark);
     color: var(--text-main);
-    /* FONTE DE SISTEMA (SEM INTER) */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     overflow-x: hidden;
+    
+    /* BLOQUEIO DE SELEÇÃO E CURSOR TIPO APP */
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge */
+    cursor: default;           /* Cursor padrão (seta) em vez de barra */
+}
+
+/* Permitir seleção apenas em campos de input */
+input, textarea {
+    user-select: text;
+    -webkit-user-select: text;
+    cursor: text;
+}
+
+/* Cursor de mãozinha em links e botões */
+a, button, .clickable {
+    cursor: pointer;
 }
 
 /* Texturas */
@@ -34,11 +52,12 @@ body {
 .bg-glow-1 { top: -100px; left: -100px; background: var(--accent); }
 .bg-glow-2 { bottom: -100px; right: -100px; background: #4f46e5; }
 
+/* ... (MANTENHA O RESTO DO ARQUIVO IGUAL ABAIXO DESSA LINHA) ... */
 
 /* =========================================
    2. SISTEMA DE LOGO
    ========================================= */
-/* O CSS DO LOGO AGORA É INJETADO VIA SCRIPT.JS PARA PADRONIZAÇÃO TOTAL COM O SHOWROOM */
+/* O CSS DO LOGO É INJETADO VIA SCRIPT.JS */
 
 
 /* =========================================
@@ -52,7 +71,6 @@ body {
     margin-bottom: 20px; 
     text-align: center; 
     background: linear-gradient(to right, #fff, #94a3b8); 
-    /* CORREÇÃO AQUI: Adicionado a propriedade padrão */
     -webkit-background-clip: text; 
     background-clip: text;
     color: transparent; 
@@ -158,7 +176,6 @@ body {
 .cta-button:hover { transform: scale(1.05); }
 
 @media (max-width: 768px) {
-    /* Ajuste para classe antiga se ainda tiver cache, e nova classe */
     .logo-wrapper, .logo-wrapper-v { font-size: 7px; } 
     .size-hero { font-size: 8px; }
     .section-title { font-size: 2.2rem; }

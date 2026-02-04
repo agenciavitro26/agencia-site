@@ -1,55 +1,74 @@
+// Tenta iniciar as logos imediatamente (caso o script rode depois do HTML)
+if (document.querySelector('.vitro-logo')) {
+    initLogos();
+    window.logosLoaded = true;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    // Se não carregou na tentativa acima, carrega agora
+    if (!window.logosLoaded) {
+        initLogos();
+    }
     
-    // 1. INJEÇÃO DO LOGO (PRIORIDADE MÁXIMA)
-    // Movido para o topo para garantir que apareça mesmo se o GSAP falhar
-    initLogos(); 
+    // Verificação de segurança para animações (GSAP)
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        try {
+            gsap.registerPlugin(ScrollTrigger);
 
-    // Verificação de Segurança: Só tenta animar se o GSAP carregou corretamente
-    if (typeof gsap !== 'undefined') {
-        gsap.registerPlugin(ScrollTrigger);
+            const heroLogo = document.querySelector("#hero .logo-wrapper-v");
+            
+            // Só anima se o logo existir e tiver sido renderizado
+            if (heroLogo) {
+                const tl = gsap.timeline({ onComplete: initScrollAnimation });
 
-        // Seletor ajustado para a classe padronizada .logo-wrapper-v
-        const heroLogo = document.querySelector("#hero .logo-wrapper-v");
-        
-        if (heroLogo) {
-            const tl = gsap.timeline({ onComplete: initScrollAnimation });
-
-            tl.from(heroLogo, {
-                duration: 1.2,
-                y: 60,
-                opacity: 0,
-                ease: "power3.out"
-            })
-            .from("#hero .accent-v", { 
-                duration: 1,
-                y: -100, 
-                opacity: 0,
-                ease: "bounce.out"
-            }, "-=0.8")
-            .to(".hero-title", {
-                opacity: 1,
-                y: 0,
-                duration: 0.8
-            })
-            .to(".scroll-indicator", {
-                opacity: 0.7,
-                duration: 0.8
-            }, "-=0.5");
-        } else {
-            initScrollAnimation();
+                tl.from(heroLogo, {
+                    duration: 1.2,
+                    y: 60,
+                    opacity: 0,
+                    ease: "power3.out"
+                })
+                .from("#hero .accent-v", { 
+                    duration: 1,
+                    y: -100, 
+                    opacity: 0,
+                    ease: "bounce.out"
+                }, "-=0.8")
+                .to(".hero-title", {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8
+                })
+                .to(".scroll-indicator", {
+                    opacity: 0.7,
+                    duration: 0.8
+                }, "-=0.5");
+            } else {
+                initScrollAnimation();
+            }
+        } catch (error) {
+            console.warn("Erro ao iniciar animação GSAP:", error);
+            // Garante que o conteúdo apareça mesmo com erro
+            document.querySelectorAll('.hero-title, .scroll-indicator').forEach(el => el.style.opacity = 1);
         }
     } else {
-        // Fallback se GSAP não carregar: garante que o título apareça
-        const title = document.querySelector(".hero-title");
-        if(title) {
-            title.style.opacity = 1;
-            title.style.transform = "none";
-        }
-        console.warn("GSAP não carregou. Animações desativadas.");
+        // Fallback: Se o GSAP não carregar, mostra tudo estático
+        initScrollAnimation(); // Chama para remover opacidade 0 dos cards
+        const titles = document.querySelectorAll(".hero-title, .scroll-indicator");
+        titles.forEach(el => {
+            el.style.opacity = 1;
+            el.style.transform = "none";
+        });
     }
 
     function initScrollAnimation() {
-        if (typeof gsap === 'undefined') return;
+        // Garante que os cards apareçam mesmo sem GSAP
+        if (typeof gsap === 'undefined') {
+            document.querySelectorAll('.card, .info-card, .price-card, .step-card, .feature-row').forEach(c => {
+                c.style.opacity = 1;
+                c.style.transform = 'none';
+            });
+            return;
+        }
 
         if(document.querySelector("#hero")) {
             gsap.to("#hero .logo-wrapper-v", {
@@ -84,39 +103,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener('mousemove', (e) => {
         if (typeof gsap === 'undefined') return;
-
         const x = (e.clientX / window.innerWidth - 0.5) * 20;
         const y = (e.clientY / window.innerHeight - 0.5) * 20;
-
-        gsap.to(".bg-glow-1, .bg-glow-2", {
-            x: x,
-            y: y,
-            duration: 2,
-            ease: "power1.out"
-        });
+        gsap.to(".bg-glow-1, .bg-glow-2", { x: x, y: y, duration: 2, ease: "power1.out" });
     });
-
 });
 
 function initLogos() {
-    // 1. INJEÇÃO DO CSS DO LOGOTIPO (COM EFEITOS DE HOVER)
+    // Evita rodar duas vezes
+    if (document.querySelector('.logo-wrapper-v')) return;
+
     const style = document.createElement('style');
     style.innerHTML = `
-        /* BASE DO LOGO - CLASSE COM SUFIXO -V */
         .logo-wrapper-v {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             user-select: none;
             line-height: 1;
-            /* Tamanho base */
             font-size: 10px; 
             cursor: pointer;
         }
-
-        /* SUBTÍTULO */
         .brand-sub-v {
             font-size: 1.2em;
             font-weight: 700;
@@ -127,8 +136,6 @@ function initLogos() {
             color: inherit; 
             opacity: 0.7;
         }
-
-        /* TÍTULO PRINCIPAL */
         .brand-main-v {
             font-size: 8em;
             font-weight: 900;
@@ -139,14 +146,11 @@ function initLogos() {
             line-height: 0.65;
             color: inherit; 
         }
-
-        /* O CHARME DO ACENTO */
         .char-o-wrapper-v {
             position: relative;
             display: inline-block;
             margin-left: 0.02em;
         }
-
         .accent-v {
             position: absolute;
             top: -0.20em;
@@ -154,13 +158,9 @@ function initLogos() {
             transform: translateX(-50%);
             font-size: 0.85em;
             font-weight: 900;
-            color: #10b981; /* Verde Vitrô Original */
-            
-            /* TRANSIÇÃO SUAVE PARA O EFEITO */
+            color: #10b981;
             transition: top 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
         }
-
-        /* O PINGO (REDONDO) */
         .dot-v {
             width: 0.15em;
             height: 0.15em;
@@ -168,29 +168,20 @@ function initLogos() {
             border-radius: 50%; 
             margin-left: 0.1em;
             display: inline-block;
-            
-            /* TRANSIÇÃO SUAVE PARA O EFEITO */
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
-
-        /* --- EFEITOS DE INTERAÇÃO (HOVER) --- */
-        
-        /* Ao passar o mouse no logo, o acento sobe e brilha */
         .logo-wrapper-v:hover .accent-v {
-            top: -0.35em; /* Levita */
-            color: #34d399; /* Verde Luz */
-            text-shadow: 0 0 20px rgba(16, 185, 129, 0.6); /* Glow */
+            top: -0.35em;
+            color: #34d399;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
         }
-
-        /* Ao passar o mouse no logo, o ponto também brilha */
         .logo-wrapper-v:hover .dot-v {
-            background-color: #34d399; /* Verde Luz */
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); /* Glow */
+            background-color: #34d399;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
         }
     `;
     document.head.appendChild(style);
 
-    // 2. INJEÇÃO DO HTML
     const logoHTML = `
         <span class="brand-sub-v">agência</span>
         <div class="brand-main-v">
