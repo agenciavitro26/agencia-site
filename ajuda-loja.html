@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Ajuda - Lojista | Agência Vitrô</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #000000; /* Preto Vitrô */
+            --accent: #25D366;  /* Verde WhatsApp */
+            --bg: #f4f4f9;
+            --card-bg: #ffffff;
+            --text: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { background-color: var(--bg); color: var(--text); padding-bottom: 80px; }
+
+        /* Cabeçalho */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        header h1 { font-size: 1.2rem; font-weight: 600; }
+        header p { font-size: 0.8rem; opacity: 0.8; margin-top: 5px; }
+
+        /* Container Principal */
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Cartões de Tutorial (Accordion) */
+        .tutorial-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            background: #fff;
+        }
+
+        .tutorial-header::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+
+        /* Estado Aberto */
+        .tutorial-card.active .tutorial-header::after {
+            transform: rotate(45deg); /* Vira um X */
+        }
+        
+        .tutorial-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        .tutorial-card.active .tutorial-content {
+            max-height: 1000px; /* Altura suficiente para o conteúdo */
+        }
+
+        .step-box {
+            padding: 15px;
+        }
+
+        .step-box ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .step-box li {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Área de Vídeo/Imagem (Placeholder) */
+        .media-placeholder {
+            width: 100%;
+            height: 180px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            border: 2px dashed #ccc;
+        }
+
+        /* Botão de Suporte Flutuante */
+        .support-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            width: 90%;
+            max-width: 350px;
+            justify-content: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        .bg-green { background: #e6fffa; color: #00acc1; border: 1px solid #00acc1; }
+        .bg-red { background: #fff5f5; color: #e53e3e; border: 1px solid #e53e3e; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Agência Vitrô</h1>
+        <p>Central de Ajuda - Painel do Lojista</p>
+    </header>
+
+    <div class="container">
+
+        <div class="tutorial-card">
+            <div class="tutorial-header" onclick="toggleTutorial(this)">
+                1. Como acessar meu Painel?
+            </div>
+            <div class="tutorial-content">
+                <div class="step-box">
+                    <p>Para gerenciar sua loja, você não precisa de computador. Tudo é feito pelo aplicativo <strong>AppSheet</strong>.</p>
+                    <br>
+                    <ol>
+                        <li>Baixe o app <strong>AppSheet</strong> na Play Store (Android) ou App Store (iPhone).</li>
+                        <li>Faça login com o e-mail Google da sua loja (ex: <em>sua_loja@gmail.com</em>).</li>
+                        <li>No menu, clique em "Shared with me" (Compartilhado comigo) ou "Owned by me".</li>
+                        <li>Clique no ícone da sua Loja para abrir.</li>
+                    </ol>
+                    </div>
+            </div>
+        </div>
+
+        <div class="tutorial-card">
+            <div class="tutorial-header" onclick="toggleTutorial(this)">
+                2. Adicionar Novo Produto 📸
+            </div>
+            <div class="tutorial-content">
+                <div class="step-box">
+                    <ol>
+                        <li>Abra o App da loja.</li>
+                        <li>Toque no botão flutuante <strong>(+)</strong> no canto inferior direito.</li>
+                        <li>Preencha o <strong>Nome</strong> e o <strong>Preço</strong>.</li>
+                        <li>Toque no ícone de <strong>Câmera</strong> para tirar uma foto na hora ou escolher da galeria.</li>
+                        <li>(Opcional) Escolha a categoria.</li>
+                        <li>Toque em <strong>Save</strong> (Salvar).</li>
+                    </ol>
+                    <p style="font-size: 0.8rem; color: #666;">
+                        ⚡ <strong>Dica:</strong> Após salvar, clique no ícone de sincronizar (setinhas girando) no topo do app para atualizar o site imediatamente.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-card">
+            <div class="tutorial-header" onclick="toggleTutorial(this)">
+                3. Remover ou Esgotar Produto 🗑️
+            </div>
+            <div class="tutorial-content">
+                <div class="step-box">
+                    <p>Se um produto acabou ou você quer tirá-lo do site:</p>
+                    <br>
+                    <ol>
+                        <li>Toque no produto que deseja remover na lista do App.</li>
+                        <li>Para <strong>Excluir</strong> definitivamente: Toque no ícone da <strong>Lixeira</strong> no topo da tela.</li>
+                        <li>Para <strong>Editar</strong> (mudar preço ou foto): Toque no ícone do <strong>Lápis</strong>.</li>
+                    </ol>
+                    <div class="status-badge bg-red">Atenção</div>
+                    <p style="font-size: 0.8rem; margin-top: 5px;">Se excluir uma categoria inteira, certifique-se de que ela está vazia antes.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="https://api.whatsapp.com/send?phone=5511999999999&text=SOS_CLIENTE:%20Preciso%20de%20ajuda%20com%20o%20painel%20da%20minha%20loja." class="support-btn" target="_blank">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        Falar com Suporte
+    </a>
+
+    <script>
+        // Script simples para abrir/fechar os tutoriais
+        function toggleTutorial(header) {
+            const card = header.parentElement;
+            // Fecha todos os outros se quiser (efeito sanfona) - Opcional
+            // document.querySelectorAll('.tutorial-card').forEach(c => {
+            //     if(c !== card) c.classList.remove('active');
+            // });
+            card.classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>
